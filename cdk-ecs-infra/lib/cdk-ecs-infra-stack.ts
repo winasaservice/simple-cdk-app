@@ -10,7 +10,10 @@ export class CdkEcsInfraStack extends cdk.Stack {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-
+    // Look up the default VPC
+    const vpc = ec2.Vpc.fromLookup(this, "VPC", {
+     isDefault: true
+    });
     // example resource
     // const queue = new sqs.Queue(this, 'CdkEcsInfraQueue', {
     //   visibilityTimeout: cdk.Duration.seconds(300)
