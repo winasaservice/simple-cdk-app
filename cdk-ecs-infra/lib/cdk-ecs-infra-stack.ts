@@ -32,6 +32,16 @@ export class CdkEcsInfraStack extends cdk.Stack {
       cpu: 256,
     });
 
+    // Passing vpc object identified previously to specify where to create these resources
+    new ecs_patterns.ApplicationLoadBalancedFargateService(this, "MyApp", {
+      vpc: vpc,
+      taskDefinition: taskDefinition,
+      desiredCount: 1,
+      serviceName: 'MyWebApp',
+      assignPublicIp: true,
+      publicLoadBalancer: true,
+    })
+    
     // example resource
     // const queue = new sqs.Queue(this, 'CdkEcsInfraQueue', {
     //   visibilityTimeout: cdk.Duration.seconds(300)
