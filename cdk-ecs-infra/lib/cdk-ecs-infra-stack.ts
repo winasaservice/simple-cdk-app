@@ -14,6 +14,24 @@ export class CdkEcsInfraStack extends cdk.Stack {
     const vpc = ec2.Vpc.fromLookup(this, "VPC", {
      isDefault: true
     });
+
+    // Create task definition and IAM role
+    const taskIamRole = new cdk.aws_iam.Role(this, "AppRole", {
+      roleName: "AppRole",
+      assumedBy: new cdk.aws_iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
+    });
+
+    const taskDefinition = new ecs.FargateTaskDefinition(this, 'Task', {
+      taskRole: taskIamRole,
+    });
+
+    taskDefinition.addContainer('MyContainer', {
+      image: ecs.ContainerImage.fromAsset('../SampleApp'),
+      portMappings: [{ containerPort: 80 }],
+      memoryReservationMiB: 256,
+      cpu: 256,
+    });
+
     // example resource
     // const queue = new sqs.Queue(this, 'CdkEcsInfraQueue', {
     //   visibilityTimeout: cdk.Duration.seconds(300)
